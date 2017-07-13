@@ -24,17 +24,21 @@ extension String{
     /// - Returns: Clean name for case to play with
     func extractWordInEnum() -> String?{
         do{
+            
             let regex: NSRegularExpression = try NSRegularExpression(pattern: "(case )([`a-zA-Z0-9, ]*)((\\W)|($))(.*)", options: .init(rawValue: 0))
+            
             if let cutDownString = self.mutableCopy() as? NSMutableString{
+                
                 regex.replaceMatches(in: cutDownString, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.characters.count) , withTemplate: "$2")
                 let cutDownStringWithoutspaces = (cutDownString as String).trimmingCharacters(in: .whitespacesAndNewlines)
                 let finalString = cutDownStringWithoutspaces.replacingOccurrences(of: ", ", with: ", .")
-                print(finalString)
+   
                 return finalString
                 
             }
         }
         catch{
+            
             print("Unexpected error while creating regular expression")
         }
         return nil

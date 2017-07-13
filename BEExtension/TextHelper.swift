@@ -19,7 +19,9 @@ class TextHelper {
     ///   - buffer: buffer we use 🤷🏻‍♂️
     ///   - completion: bool for indicating success, buffer and array of line indexes to iterate and find our line Strings
     class func getSelectedLineIndexes(fromBuffer buffer: XCSourceTextBuffer, completion: (Bool, XCSourceTextBuffer, [Int]?) -> Void){
-        guard let selectedRange = buffer.selections as? [XCSourceTextRange], let theOnlySelectedRange = selectedRange.first else {
+        guard let selectedRange = buffer.selections as? [XCSourceTextRange],
+              let theOnlySelectedRange = selectedRange.first
+              else {
             completion(false, buffer, nil)
             return
         }
@@ -39,7 +41,9 @@ class TextHelper {
     class func getSelectedLinesText(withBuffer buffer: XCSourceTextBuffer, withIndexes indexes: [Int]) -> [String]{
         var lines = [String]()
         for index in indexes{
+            
             if let line = buffer.lines[index] as? String{
+                
                 if line.contains("case"){
                     lines.append(line)
                 }

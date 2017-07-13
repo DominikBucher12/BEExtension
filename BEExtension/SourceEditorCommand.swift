@@ -18,20 +18,43 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     func perform(with invocation: XCSourceEditorCommandInvocation, completionHandler: @escaping (Error?) -> Void ) -> Void {
         // Implement your command here, invoking the completion handler when done. Pass it nil on success, and an NSError on failure.
         guard invocation.buffer.contentUTI == Identifiers.ContentUTIs.swiftSource.rawValue else {
+            
             let errorWithUTI = createError(withError: .wrongUTI)
             completionHandler(errorWithUTI)
-            return}
+            
+            return
+            
+        }
         TextHelper.getSelectedLineIndexes(fromBuffer: invocation.buffer, completion: { (success, buffer, indexes) in
-            guard success, let indexes = indexes, indexes.count > 1 else {
-                let emptySelectionError = createError(withError: .emptySelection)
-                completionHandler(emptySelectionError)
-                return}
+            guard success,
+                  let indexes = indexes, indexes.count > 1 
+                  else {
+                    let emptySelectionError = createError(withError: .emptySelection)
+                    completionHandler(emptySelectionError)
+                   
+                    return
+                    
+            }
             let lines = TextHelper.getPreparedWords(fromText: TextHelper.getSelectedLinesText(withBuffer: buffer, withIndexes: indexes))
-            guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer) else {
-                completionHandler(nil)
-                return}
-            let pieceOfCode = codeSnippet(withCommandIdentifier: invocation.commandIdentifier, withWords: lines, withTabWidth: invocation.buffer.tabWidth)
+            
+            guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer)
+                  else {
+               
+                    completionHandler(nil)
+               
+                    return
+                    
+            }
+            
+            
+            let pieceOfCode = codeSnippet(
+                                withCommandIdentifier: invocation.commandIdentifier,
+                                withWords: lines, 
+                                withTabWidth: invocation.buffer.tabWidth
+                                )
+            
             let linesAhead = self.linesAhead(lastSelectedline: lastSelectedLine, withBuffer: invocation.buffer)
+            
             invocation.buffer.lines.insert("\n", at: lastSelectedLine + linesAhead )
             invocation.buffer.lines.insert(pieceOfCode, at: lastSelectedLine + linesAhead + 1)
             completionHandler(nil)
@@ -43,10 +66,13 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         //  let words = TextHelper.getPreparedWords(fromText: words)
         switch identifier {
         case Identifiers.Commands.makeJustSwitch.rawValue:
+            
             return TextHelper.generateSwitch(fromCases: words, tabWidth: tabWidth)
         case Identifiers.Commands.makeVariable.rawValue:
+            
             return TextHelper.generateVariable(withEnumCases: words, withTabWidth: tabWidth)
         default:
+            
             return "Nothin', sorry..."
             //Cannot happen until we change that rawValue in our enum...
         }
@@ -61,7 +87,6 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             [
                 NSLocalizedDescriptionKey :  NSLocalizedString(error.errorDescription ?? "neverNil", value: error.errorDescription ?? "NeveNil", comment: "") ,
                 ]
-        //JK.
         let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo)
         return error
     }
@@ -74,8 +99,10 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     /// - Returns: index of last line we selected
     private func lastSelectedLine(fromBuffer buffer: XCSourceTextBuffer) -> Int? {
         if let range = (buffer.selections.lastObject as? XCSourceTextRange){
+            
             return range.end.line
         }
+        
         return nil
     }
     
@@ -90,6 +117,7 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     private func linesAhead(lastSelectedline line: Int, withBuffer buffer: XCSourceTextBuffer) -> Int{
         var linesAhead = 0
         for index in line...buffer.lines.count{
+            
             if let line = buffer.lines[index] as? String{
                 
                 if line.contains("case"){
