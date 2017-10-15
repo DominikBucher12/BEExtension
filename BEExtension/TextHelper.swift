@@ -69,17 +69,22 @@ class TextHelper {
     class func generateVariable(withEnumCases cases: [String], withTabWidth tabWidth: Int) -> String{
         let indent = String(repeating: " ", count: tabWidth)
         let doubleIndent = String(repeating: " ", count: 2*tabWidth)
-        let casesStr = cases.map { "\n\(doubleIndent)case .\($0):\n" + "\(indent)\(doubleIndent)return <#value#>\n" }.joined()
+        let casesStr = cases.map { """
+            \(doubleIndent)case .\($0):\n
+            \(indent)\(doubleIndent)return <#type#>\n
+            """ }.joined()
         
         // Should be fine:
         // var <#name#>: <#type#>{
         //     switch self{
-        //    case generated:
+        //     case generated:
         //     return <#value#>
-        return "\(indent)var <#name#>: <#type#>{\n" +
-            "\(doubleIndent)switch self {\n" +
-            "\(casesStr)\(doubleIndent)}\n" +
-        "\(indent)}\n\n"
+        return """
+        \(indent)var <#name#>: <#type#>{\n
+        \(doubleIndent)switch self {
+        \(casesStr)\(doubleIndent)}\n
+        \(indent)}\n
+        """
     }
     
     
@@ -92,15 +97,20 @@ class TextHelper {
     class func generateSwitch(fromCases cases: [String], tabWidth: Int) -> String {
         let indent = String(repeating: " ", count: tabWidth)
         let doubleIndent = String(repeating: " ", count: 2*tabWidth)
-        let casesStr = cases.map { "\n\(doubleIndent)case .\($0):\n"+"\(indent)\(doubleIndent)return <#type#>\n" }.joined()
+        let casesStr = cases.map { """
+            \(doubleIndent)case .\($0):\n
+            \(indent)\(doubleIndent) <#case body#>\n
+            """ }.joined()
         
         // Should be fine:
         // switch <#name#>{
         //    case generated:
         //     return <#value#>
-        return "\(indent)switch <#name#> {\n" +
-            "\(casesStr)\(doubleIndent)}\n" +
-        "\(indent)}\n"
+        return """
+                \(indent)switch <#name#> {
+                \(casesStr)\(doubleIndent)}\n
+                \(indent)}\n
+                """
     }
     
     

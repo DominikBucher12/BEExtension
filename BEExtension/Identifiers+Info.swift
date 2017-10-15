@@ -55,16 +55,18 @@ import XcodeKit
  
  NSString *whatsGoingOnWithThisSyntax = @"Good evening mister,"
  "even I can do multilines!";
+
+ edit: Swift 4 🤵🏻
  
  
  5.) After we fire this up we need to insert this text properly... I guess I will map functions under these points
- 
- 
+
  */
 
 
 
 //TODO: Make more of singleton, didn't think of creating only one instance
+
 
 struct Identifiers {
     ///Content UTIs identificators -> You can do your homework and read this:  https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html

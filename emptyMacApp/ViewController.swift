@@ -10,6 +10,34 @@ import Cocoa
 
 class ViewController: NSViewController {
 
+    enum SuperEnum {
+        case awesome
+        case cool, veryCool, extraCool
+
+    var someVar: String{
+
+        switch self {
+        case .awesome:
+
+            return "superAwesom"
+        case .cool, .veryCool, .extraCool:
+
+            return "superCool"
+        }
+
+    }
+
+    }
+
+
+
+
+    var smth: SuperEnum = .awesome
+
+    func doSwitch(with smth: SuperEnum) {
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,5 +51,17 @@ class ViewController: NSViewController {
     }
 
 
+}
+
+extension ViewController {
+
+
+    func doSmthAwesome() {
+
+    }
+
+    func doSmthCool() {
+
+    }
 }
 

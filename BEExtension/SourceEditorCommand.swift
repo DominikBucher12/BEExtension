@@ -25,33 +25,34 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             return
             
         }
+
         TextHelper.getSelectedLineIndexes(fromBuffer: invocation.buffer, completion: { (success, buffer, indexes) in
             guard success,
-                  let indexes = indexes, indexes.count > 1 
-                  else {
+                let indexes = indexes, indexes.count > 1
+                else {
                     let emptySelectionError = createError(withError: .emptySelection)
                     completionHandler(emptySelectionError)
-                   
+
                     return
                     
             }
             let lines = TextHelper.getPreparedWords(fromText: TextHelper.getSelectedLinesText(withBuffer: buffer, withIndexes: indexes))
             
             guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer)
-                  else {
-               
+                else {
+
                     completionHandler(nil)
-               
+
                     return
                     
             }
             
             
             let pieceOfCode = codeSnippet(
-                                withCommandIdentifier: invocation.commandIdentifier,
-                                withWords: lines, 
-                                withTabWidth: invocation.buffer.tabWidth
-                                )
+                withCommandIdentifier: invocation.commandIdentifier,
+                withWords: lines,
+                withTabWidth: invocation.buffer.tabWidth
+            )
             
             let linesAhead = self.linesAhead(lastSelectedline: lastSelectedLine, withBuffer: invocation.buffer)
             
@@ -82,12 +83,17 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     ///
     /// - Parameter error: error from possible errors that could occur during text selection
     /// - Returns: NSError to pass to Xcode
-    func createError(withError error: Identifiers.PossibleErrors) -> NSError{
+    func createError(withError error: Identifiers.PossibleErrors) -> NSError {
         let userInfo: [AnyHashable : Any] =
             [
-                NSLocalizedDescriptionKey :  NSLocalizedString(error.errorDescription ?? "neverNil", value: error.errorDescription ?? "NeveNil", comment: "") ,
+                NSLocalizedDescriptionKey :  NSLocalizedString(
+                    error.errorDescription ?? "neverNil",
+                    value: error.errorDescription ?? "NeveNil",
+                    comment: ""
+                ) ,
                 ]
-        let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo)
+
+        let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo as? [String : Any])
         return error
     }
     
