@@ -87,7 +87,7 @@ extension SourceEditorCommand {
     /// - Returns: index of last line we selected
     private func lastSelectedLine(fromBuffer buffer: XCSourceTextBuffer) -> Int? {
 
-        return (buffer.selections.lastObject as? XCSourceTextRange).end.line ?? nil
+        return (buffer.selections.lastObject as? XCSourceTextRange)?.end.line ?? nil
     }
 
     /// Returns lines below our selected text (to be a bit idiotproof, but not too much) - if we find something in our way,
