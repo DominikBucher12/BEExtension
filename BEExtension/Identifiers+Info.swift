@@ -63,28 +63,35 @@ import XcodeKit
 
  */
 
-
-
 //TODO: Make more of singleton, didn't think of creating only one instance
 
-
 struct Identifiers {
-    ///Content UTIs identificators -> You can do your homework and read this:  https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html
+    ///Content UTIs identificators
+    ///
+    /// -> You can do your homework and read [this](https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html)
+    ///
+    /// Enum:
+    /// - swiftSource
     public enum ContentUTIs: String {
+
         case swiftSource = "public.swift-source"
     }
     
     
     //TODO: Make this more generic -> could be some class XcodeKitError which implements NSError straight to completionHandler
-    public enum PossibleErrors: LocalizedError{
+    public enum PossibleErrors: LocalizedError {
+
         case wrongUTI
         case emptySelection
         case wrongSelection
         case `default`
         
-        var errorDescription: String? {
+        var errorDescription: String {
+
             switch self {
+
             case .wrongUTI:
+
                 return NSLocalizedString("Wrong UTI, please ensure you are trying to edit Swift source code", comment: "wrong UTI")
             case .emptySelection:
                 
@@ -103,7 +110,8 @@ struct Identifiers {
     /// No need for declaring rawValues as it carries the same name, cool feature Swift 👍
     /// - makeVariable: 🙀
     /// - makeJustSwitch: 🙀
-    public enum Commands: String{
+    public enum Commands: String {
+        
         case makeVariable
         case makeJustSwitch
     }

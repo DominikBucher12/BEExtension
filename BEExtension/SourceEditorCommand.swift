@@ -12,54 +12,36 @@ import XcodeKit
 //TODO: Do some refactoring later when adding new features.
 
 class SourceEditorCommand: NSObject, XCSourceEditorCommand {
-    
-    
-    
+
     func perform(with invocation: XCSourceEditorCommandInvocation, completionHandler: @escaping (Error?) -> Void ) -> Void {
+
         // Implement your command here, invoking the completion handler when done. Pass it nil on success, and an NSError on failure.
         guard invocation.buffer.contentUTI == Identifiers.ContentUTIs.swiftSource.rawValue else {
-            
+
             let errorWithUTI = createError(withError: .wrongUTI)
             completionHandler(errorWithUTI)
-            
             return
-            
         }
 
-        TextHelper.getSelectedLineIndexes(fromBuffer: invocation.buffer, completion: { (success, buffer, indexes) in
-            guard success,
-                let indexes = indexes, indexes.count > 1
-                else {
-                    let emptySelectionError = createError(withError: .emptySelection)
-                    completionHandler(emptySelectionError)
+        guard let selectedText = try? getSelectedLinesText(withBuffer: invocation.buffer) else { completionHandler(nil); return; }
+        let words = TextHelper.getPreparedWords(fromText: selectedText)
 
-                    return
-                    
-            }
-            let lines = TextHelper.getPreparedWords(fromText: TextHelper.getSelectedLinesText(withBuffer: buffer, withIndexes: indexes))
-            
-            guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer)
-                else {
+        guard   let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer)/*,
+             let selectedRange = invocation.buffer.selections as? [XCSourceTextRange],
+             let theOnlySelectedRange = selectedRange.first*/
+            else { completionHandler(nil); return; }
 
-                    completionHandler(nil)
+        let pieceOfCode = codeSnippet(
+            withCommandIdentifier: invocation.commandIdentifier,
+            withWords: words,
+            withTabWidth: invocation.buffer.tabWidth
+        )
 
-                    return
-                    
-            }
-            
-            
-            let pieceOfCode = codeSnippet(
-                withCommandIdentifier: invocation.commandIdentifier,
-                withWords: lines,
-                withTabWidth: invocation.buffer.tabWidth
-            )
-            
-            let linesAhead = self.linesAhead(lastSelectedline: lastSelectedLine, withBuffer: invocation.buffer)
-            
-            invocation.buffer.lines.insert("\n", at: lastSelectedLine + linesAhead )
-            invocation.buffer.lines.insert(pieceOfCode, at: lastSelectedLine + linesAhead + 1)
-            completionHandler(nil)
-        })
+        let linesAhead = self.linesAhead(lastSelectedline: lastSelectedLine, withBuffer: invocation.buffer)
+
+        invocation.buffer.lines.insert("\n", at: lastSelectedLine + linesAhead )
+        invocation.buffer.lines.insert(pieceOfCode, at: lastSelectedLine + linesAhead + 1)
+        completionHandler(nil)
     }
     
     
@@ -84,14 +66,14 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     /// - Parameter error: error from possible errors that could occur during text selection
     /// - Returns: NSError to pass to Xcode
     func createError(withError error: Identifiers.PossibleErrors) -> NSError {
-        let userInfo: [AnyHashable : Any] =
-            [
-                NSLocalizedDescriptionKey :  NSLocalizedString(
-                    error.errorDescription ?? "neverNil",
-                    value: error.errorDescription ?? "NeveNil",
-                    comment: ""
-                ) ,
-                ]
+
+        let userInfo: [AnyHashable : Any] = [
+            NSLocalizedDescriptionKey :  NSLocalizedString(
+                error.errorDescription,
+                value: error.errorDescription,
+                comment: ""
+            ) ,
+            ]
 
         let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo as? [String : Any])
         return error
@@ -111,8 +93,7 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         
         return nil
     }
-    
-    
+
     // TODO: Implement function that will automatically add default case when not selected all enum cases
     /// Returns lines below our selected text (to be a bit idiotproof, but not too much) - if we find something in our way, we simply skip that or break on next var, enum end or next enum in enum...
     ///

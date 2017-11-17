@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E782FF7B1FB8DA9A00377758 /* SourceEditorCommand+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E782FF7A1FB8DA9A00377758 /* SourceEditorCommand+Extensions.swift */; };
 		E7D31E771ED85A9300F1651C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D31E761ED85A9300F1651C /* AppDelegate.swift */; };
 		E7D31E791ED85A9300F1651C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D31E781ED85A9300F1651C /* ViewController.swift */; };
 		E7D31E7B1ED85A9300F1651C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D31E7A1ED85A9300F1651C /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E782FF7A1FB8DA9A00377758 /* SourceEditorCommand+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SourceEditorCommand+Extensions.swift"; sourceTree = "<group>"; };
 		E7D31E731ED85A9300F1651C /* emptyMacApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emptyMacApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7D31E761ED85A9300F1651C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7D31E781ED85A9300F1651C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			children = (
 				E7D31E901ED85A9F00F1651C /* SourceEditorExtension.swift */,
 				E7D31E921ED85A9F00F1651C /* SourceEditorCommand.swift */,
+				E782FF7A1FB8DA9A00377758 /* SourceEditorCommand+Extensions.swift */,
 				E7D31E9C1ED85AB400F1651C /* Identifiers+Info.swift */,
 				E7D31E9D1ED85AB400F1651C /* String+Extensions.swift */,
 				E7D31E9E1ED85AB400F1651C /* TextHelper.swift */,
@@ -260,6 +263,7 @@
 				E7D31EA01ED85AB400F1651C /* String+Extensions.swift in Sources */,
 				E7D31E9F1ED85AB400F1651C /* Identifiers+Info.swift in Sources */,
 				E7D31EA11ED85AB400F1651C /* TextHelper.swift in Sources */,
+				E782FF7B1FB8DA9A00377758 /* SourceEditorCommand+Extensions.swift in Sources */,
 				E7D31E911ED85A9F00F1651C /* SourceEditorExtension.swift in Sources */,
 				E7D31E931ED85A9F00F1651C /* SourceEditorCommand.swift in Sources */,
 			);
