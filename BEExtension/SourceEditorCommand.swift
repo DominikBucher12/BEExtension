@@ -26,10 +26,7 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         guard let selectedText = try? getSelectedLinesText(withBuffer: invocation.buffer) else { completionHandler(nil); return; }
         let words = TextHelper.getPreparedWords(fromText: selectedText)
 
-        guard   let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer)/*,
-             let selectedRange = invocation.buffer.selections as? [XCSourceTextRange],
-             let theOnlySelectedRange = selectedRange.first*/
-            else { completionHandler(nil); return; }
+        guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer) else { completionHandler(nil); return; }
 
         let pieceOfCode = codeSnippet(
             withCommandIdentifier: invocation.commandIdentifier,
@@ -78,34 +75,35 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo as? [String : Any])
         return error
     }
-    
-    //MARK: Inserting methods
-    
+}
+
+//MARK: Inserting methods
+
+extension SourceEditorCommand {
+
     /// returns index of last selected line from buffer
     ///
     /// - Parameter buffer: The only buffer we get
     /// - Returns: index of last line we selected
     private func lastSelectedLine(fromBuffer buffer: XCSourceTextBuffer) -> Int? {
-        if let range = (buffer.selections.lastObject as? XCSourceTextRange){
-            
-            return range.end.line
-        }
-        
-        return nil
+
+        return (buffer.selections.lastObject as? XCSourceTextRange).end.line ?? nil
     }
 
-    // TODO: Implement function that will automatically add default case when not selected all enum cases
-    /// Returns lines below our selected text (to be a bit idiotproof, but not too much) - if we find something in our way, we simply skip that or break on next var, enum end or next enum in enum...
+    /// Returns lines below our selected text (to be a bit idiotproof, but not too much) - if we find something in our way,
+    /// we simply skip that or break on next var, enum end or next enum in enum...
     ///
     /// - Parameters:
     ///   - line: the last line we selected
     ///   - buffer: text buffer upon we are working
     /// - Returns: returns how many lines from selected text we need to skip to extract nice piece of code...
-    private func linesAhead(lastSelectedline line: Int, withBuffer buffer: XCSourceTextBuffer) -> Int{
+    private func linesAhead(lastSelectedline line: Int, withBuffer buffer: XCSourceTextBuffer) -> Int {
+
         var linesAhead = 0
-        for index in line...buffer.lines.count{
+
+        for index in line...buffer.lines.count {
             
-            if let line = buffer.lines[index] as? String{
+            if let line = buffer.lines[index] as? String {
                 
                 if line.contains("case"){
                     linesAhead += 1
