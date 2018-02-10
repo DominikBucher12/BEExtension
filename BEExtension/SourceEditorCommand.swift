@@ -18,22 +18,30 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         // Implement your command here, invoking the completion handler when done. Pass it nil on success, and an NSError on failure.
         guard invocation.buffer.contentUTI == Identifiers.ContentUTIs.swiftSource.rawValue else {
 
-            let errorWithUTI = createError(withError: .wrongUTI)
+            let errorWithUTI = create(error: .wrongUTI)
             completionHandler(errorWithUTI)
             return
         }
 
-        guard let selectedText = try? getSelectedLinesText(withBuffer: invocation.buffer) else { completionHandler(nil); return; }
+        // Select the text, get the identifier chosen, if something fails return without error...
+        guard let selectedText = try? getSelectedLinesText(withBuffer: invocation.buffer),
+              let commandIdentifier = Identifiers.Commands(rawValue: invocation.commandIdentifier)
+        else { completionHandler(nil); return; }
+
+        // Prepare the text from the buffer to be parsed.
         let words = TextHelper.getPreparedWords(fromText: selectedText)
 
+        // We need to get the last selected line to insert our variable / switch below
         guard let lastSelectedLine = lastSelectedLine(fromBuffer: invocation.buffer) else { completionHandler(nil); return; }
 
+        // Create the code snippet
         let pieceOfCode = codeSnippet(
-            withCommandIdentifier: invocation.commandIdentifier,
+            withCommandIdentifier: commandIdentifier,
             withWords: words,
             withTabWidth: invocation.buffer.tabWidth
         )
 
+        // Get the lines ahead of the selection.
         let linesAhead = self.linesAhead(lastSelectedline: lastSelectedLine, withBuffer: invocation.buffer)
 
         invocation.buffer.lines.insert("\n", at: lastSelectedLine + linesAhead )
@@ -42,19 +50,14 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     }
     
     
-    func codeSnippet(withCommandIdentifier identifier: String, withWords words: [String], withTabWidth tabWidth: Int ) -> String{
-        //  let words = TextHelper.getPreparedWords(fromText: words)
+    func codeSnippet(withCommandIdentifier identifier: Identifiers.Commands, withWords words: [String], withTabWidth tabWidth: Int ) -> String {
+
         switch identifier {
-        case Identifiers.Commands.makeJustSwitch.rawValue:
-            
+        case .makeJustSwitch:
             return TextHelper.generateSwitch(fromCases: words, tabWidth: tabWidth)
-        case Identifiers.Commands.makeVariable.rawValue:
-            
+
+        case .makeVariable:
             return TextHelper.generateVariable(withEnumCases: words, withTabWidth: tabWidth)
-        default:
-            
-            return "Nothin', sorry..."
-            //Cannot happen until we change that rawValue in our enum...
         }
     }
     
@@ -62,58 +65,17 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     ///
     /// - Parameter error: error from possible errors that could occur during text selection
     /// - Returns: NSError to pass to Xcode
-    func createError(withError error: Identifiers.PossibleErrors) -> NSError {
+    private func create(error: Identifiers.PossibleErrors) -> NSError {
 
         let userInfo: [AnyHashable : Any] = [
             NSLocalizedDescriptionKey :  NSLocalizedString(
                 error.errorDescription,
                 value: error.errorDescription,
                 comment: ""
-            ) ,
+            )
             ]
 
         let error = NSError(domain: "com.dominikbucher.xcodeKitError", code: 1, userInfo: userInfo as? [String : Any])
         return error
-    }
-}
-
-//MARK: Inserting methods
-
-extension SourceEditorCommand {
-
-    /// returns index of last selected line from buffer
-    ///
-    /// - Parameter buffer: The only buffer we get
-    /// - Returns: index of last line we selected
-    private func lastSelectedLine(fromBuffer buffer: XCSourceTextBuffer) -> Int? {
-
-        return (buffer.selections.lastObject as? XCSourceTextRange).end.line ?? nil
-    }
-
-    /// Returns lines below our selected text (to be a bit idiotproof, but not too much) - if we find something in our way,
-    /// we simply skip that or break on next var, enum end or next enum in enum...
-    ///
-    /// - Parameters:
-    ///   - line: the last line we selected
-    ///   - buffer: text buffer upon we are working
-    /// - Returns: returns how many lines from selected text we need to skip to extract nice piece of code...
-    private func linesAhead(lastSelectedline line: Int, withBuffer buffer: XCSourceTextBuffer) -> Int {
-
-        var linesAhead = 0
-
-        for index in line...buffer.lines.count {
-            
-            if let line = buffer.lines[index] as? String {
-                
-                if line.contains("case"){
-                    linesAhead += 1
-                }
-                else{
-                    buffer.lines.insert("\n", at: index)
-                    break
-                }
-            }
-        }
-        return linesAhead
     }
 }
