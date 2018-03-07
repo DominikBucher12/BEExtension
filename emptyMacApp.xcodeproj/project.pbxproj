@@ -243,9 +243,8 @@
 				TargetAttributes = {
 					E7D31E721ED85A9300F1651C = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = X2MB65427X;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					E7D31E881ED85A9F00F1651C = {
 						CreatedOnToolsVersion = 8.3.2;
@@ -474,10 +473,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer: d.bucher@centrum.cz (48DAV65459)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = X2MB65427X;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = emptyMacApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dominikbucher.emptyMacApp;
@@ -493,10 +492,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = X2MB65427X;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = emptyMacApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dominikbucher.emptyMacApp;
