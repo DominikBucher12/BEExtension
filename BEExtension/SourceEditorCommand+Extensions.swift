@@ -24,7 +24,7 @@ extension SourceEditorCommand {
         else { throw NSError() } // You can handle the completion handler here, something like no selection or something like that...
 
         let indexes = Array(firstRange.start.line...firstRange.end.line)
-        return indexes.map({ buffer.lines[$0] as? String }).flatMap({$0})
+        return indexes.map({ buffer.lines[$0] as? String }).compactMap({$0})
     }
 }
 
