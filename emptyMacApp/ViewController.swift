@@ -8,41 +8,9 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
-
-    enum SuperEnum {
-        case awesome
-        case cool, veryCool, extraCool
-    }
-
-    func doSwitch(with smth: SuperEnum) {
-
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
-
-
+enum SuperEnum {
+    case awesome
+    case cool, veryCool, extraCool
 }
 
-extension ViewController {
-
-
-    func doSmthAwesome() {
-
-    }
-
-    func doSmthCool() {
-
-    }
-}
-
+class ViewController: NSViewController { }

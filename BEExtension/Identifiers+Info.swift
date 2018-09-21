@@ -73,7 +73,6 @@ struct Identifiers {
     /// Enum:
     /// - swiftSource
     public enum ContentUTIs: String {
-
         case swiftSource = "public.swift-source"
     }
     
@@ -91,13 +90,10 @@ struct Identifiers {
             switch self {
 
             case .wrongUTI:
-
                 return NSLocalizedString("Wrong UTI, please ensure you are trying to edit Swift source code", comment: "wrong UTI")
             case .emptySelection:
-                
                 return NSLocalizedString("Empty selection, please select enum cases to work with", comment: "Empty selection")
             case .wrongSelection:
-                
                 return NSLocalizedString("Whoops, something went bad, please ensure you are selecting right part of text", comment: "Wrong selection")
             case .default:
                 
@@ -111,7 +107,6 @@ struct Identifiers {
     /// - makeVariable: 🙀
     /// - makeJustSwitch: 🙀
     public enum Commands: String {
-        
         case makeVariable
         case makeJustSwitch
     }
